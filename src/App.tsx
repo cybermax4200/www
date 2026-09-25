@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Features from './components/Features';
@@ -7,6 +8,7 @@ import Layout from './components/Layout';
 import TrustStrip from './components/TrustStrip';
 import PartnerStrip from './components/PartnerStrip';
 import { ThemeProvider } from './context/ThemeContext';
+import { usePageSeo } from './utils/seo';
 
 // Lazy load below-the-fold homepage components
 const StealthAnimation = lazy(() => import('./components/StealthAnimation'));
@@ -45,8 +47,21 @@ const Ecosystem = lazy(() => import('./pages/Ecosystem'));
 const ChainsPage = lazy(() => import('./pages/Chains'));
 
 function Home() {
+  const seo = usePageSeo('home');
+
   return (
     <div className="bg-surface text-on-surface">
+      <Helmet>
+        <title>{seo.title}</title>
+        <meta name="description" content={seo.description} />
+        <link rel="canonical" href={seo.canonical} />
+        {seo.alternates.map((alt) => (
+          <link key={alt.hreflang} rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+        ))}
+        <meta property="og:title" content={seo.title} />
+        <meta property="og:description" content={seo.description} />
+        <meta property="og:url" content={seo.canonical} />
+      </Helmet>
       <a href="#main-content" className="skip-link">
         Skip to content
       </a>

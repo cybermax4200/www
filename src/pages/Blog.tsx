@@ -17,6 +17,8 @@ import BlogToc from '../components/BlogToc';
 import { article, breadcrumbList, SITE_URL } from '../utils/jsonld';
 import { track } from '../utils/track';
 import i18n from '../i18n';
+import { usePageSeo } from '../utils/seo';
+import { usePageSeo } from '../utils/seo';
 
 function AuthorByline({ post }: { post: BlogPost }) {
   if (!post.author) return null;
@@ -46,6 +48,7 @@ function normalizeLocale(lang: string | undefined): string {
 
 function BlogList() {
   const posts = getAllPosts();
+  const seo = usePageSeo('blog');
 
   const listCrumbs = breadcrumbList([
     { name: 'Home', url: SITE_URL },
@@ -59,11 +62,15 @@ function BlogList() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(listCrumbs) }}
       />
       <Helmet>
-        <title>Blog – Wraith Protocol</title>
-        <meta
-          name="description"
-          content="Updates from Wraith Protocol on privacy-preserving payments and stealth infrastructure."
-        />
+        <title>{seo.title}</title>
+        <meta name="description" content={seo.description} />
+        <link rel="canonical" href={seo.canonical} />
+        {seo.alternates.map((alt) => (
+          <link key={alt.hreflang} rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+        ))}
+        <meta property="og:title" content={seo.title} />
+        <meta property="og:description" content={seo.description} />
+        <meta property="og:url" content={seo.canonical} />
         <link
           rel="alternate"
           type="application/rss+xml"

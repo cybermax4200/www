@@ -325,6 +325,28 @@
     "ogTitle": "Wraith Protocol",
     "ogDescription": "Private payments for every chain. Stealth addresses, multichain SDK, and AI-powered privacy agents."
   },
+  "pageSeo": {
+    "home": {
+      "title": "Wraith Protocol — Private payments for every chain",
+      "description": "Wraith Protocol enables private payments on any blockchain using stealth addresses. One SDK, multiple chains."
+    },
+    "stellar": {
+      "title": "Stealth payments on Stellar – Wraith Protocol",
+      "description": "Low-cost, sub-second, ed25519 stealth payments on Stellar with Soroban smart contracts. Build private payment rails with the Wraith SDK."
+    },
+    "grants": {
+      "title": "Grants – Wraith Protocol",
+      "description": "Apply for a Wraith grant to fund stealth address tooling, SDK integrations, and privacy-preserving payment infrastructure."
+    },
+    "blog": {
+      "title": "Blog – Wraith Protocol",
+      "description": "Updates from Wraith Protocol on privacy-preserving payments and stealth infrastructure."
+    },
+    "caseStudies": {
+      "title": "Case Studies – Wraith Protocol",
+      "description": "Production stories from teams using Wraith Protocol for private, unlinkable payments across multiple chains."
+    }
+  },
   "caseStudies": {
     "eyebrow": "CASE STUDIES",
     "heading": "Real-world privacy solutions.",

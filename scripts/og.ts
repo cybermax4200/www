@@ -216,7 +216,11 @@ async function renderPng(config: RouteConfig, fonts: FontDef[]): Promise<Buffer>
 }
 
 function patchMetadata(html: string, config: RouteConfig): string {
-  const imageUrl = `https://usewraith.xyz/og/${config.slug}.png`;
+  const siteUrl = 'https://usewraith.xyz';
+  const imageUrl = `${siteUrl}/og/${config.slug}.png`;
+  const canonicalUrl =
+    config.routePath === '/' ? siteUrl : `${siteUrl}${config.routePath}`;
+
   let patched = html
     .replace(/(<meta\s+property="og:image"\s+content=")[^"]*(")/g, `$1${imageUrl}$2`)
     .replace(/(<meta\s+name="twitter:image"\s+content=")[^"]*(")/g, `$1${imageUrl}$2`);
@@ -236,13 +240,35 @@ function patchMetadata(html: string, config: RouteConfig): string {
       .replace(/(<meta\s+name="twitter:description"\s+content=")[^"]*(")/g, `$1${desc}$2`);
   }
 
+  // Canonical + hreflang alternates
+  // Remove any previously injected canonical/hreflang links so we don't duplicate on re-runs.
+  patched = patched.replace(
+    /\s*<link\s+rel="canonical"[^>]*>\s*/g,
+    '\n    ',
+  );
+  patched = patched.replace(
+    /\s*<link\s+rel="alternate"\s+hreflang=[^>]*>\s*/g,
+    '\n    ',
+  );
+
+  const hreflangLinks = [
+    `<link rel="canonical" href="${canonicalUrl}" />`,
+    `<link rel="alternate" hreflang="en" href="${canonicalUrl}" />`,
+    `<link rel="alternate" hreflang="es" href="${canonicalUrl}" />`,
+    `<link rel="alternate" hreflang="pt-BR" href="${canonicalUrl}" />`,
+    `<link rel="alternate" hreflang="x-default" href="${canonicalUrl}" />`,
+  ].join('\n    ');
+
+  // Inject before </head>
+  patched = patched.replace('</head>', `    ${hreflangLinks}\n  </head>`);
+
   // Breadcrumb JSON-LD
   const breadcrumbListElement: any[] = [
     {
       '@type': 'ListItem',
       position: 1,
       name: 'Home',
-      item: 'https://usewraith.xyz',
+      item: siteUrl,
     },
   ];
 
@@ -251,7 +277,7 @@ function patchMetadata(html: string, config: RouteConfig): string {
       '@type': 'ListItem',
       position: 2,
       name: config.title,
-      item: `https://usewraith.xyz${config.routePath}`,
+      item: canonicalUrl,
     });
   }
 

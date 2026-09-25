@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { entries } from '../data/case-studies.json';
 import Layout from '../components/Layout';
 import { article, breadcrumbList, SITE_URL } from '../utils/jsonld';
+import { usePageSeo } from '../utils/seo';
 
 type CaseStudy = {
   id: string;
@@ -247,6 +249,7 @@ function CaseStudyDetail({ study }: { study: CaseStudy }) {
 function CaseStudiesList() {
   const { t } = useTranslation();
   const [filter, setFilter] = useState<string>('all');
+  const seo = usePageSeo('caseStudies');
 
   const caseStudies = entries as CaseStudy[];
   const filteredStudies =
@@ -256,6 +259,21 @@ function CaseStudiesList() {
 
   return (
     <Layout>
+      <Helmet>
+        <title>{seo.title}</title>
+        <meta name="description" content={seo.description} />
+        <link rel="canonical" href={seo.canonical} />
+        {seo.alternates.map((alt) => (
+          <link key={alt.hreflang} rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+        ))}
+        <meta property="og:title" content={seo.title} />
+        <meta property="og:description" content={seo.description} />
+        <meta property="og:url" content={seo.canonical} />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={seo.title} />
+        <meta name="twitter:description" content={seo.description} />
+      </Helmet>
       <div className="mx-auto max-w-[1344px] px-6 py-16 md:px-12">
         {/* Header */}
         <div className="mb-12 flex flex-col gap-6 border-b border-outline-variant pb-10">

@@ -325,6 +325,28 @@
     "ogTitle": "Wraith Protocol",
     "ogDescription": "Pagamentos privados para cada rede. Endereços ocultos, SDK multi-rede e agentes de privacidade com IA."
   },
+  "pageSeo": {
+    "home": {
+      "title": "Wraith Protocol — Pagamentos privados para cada rede",
+      "description": "Wraith Protocol permite pagamentos privados em qualquer blockchain usando endereços ocultos. Um SDK, múltiplas redes."
+    },
+    "stellar": {
+      "title": "Pagamentos ocultos no Stellar – Wraith Protocol",
+      "description": "Pagamentos ocultos ed25519 de baixo custo e alta velocidade no Stellar com contratos inteligentes Soroban. Construa trilhos de pagamento privados com o SDK Wraith."
+    },
+    "grants": {
+      "title": "Bolsas – Wraith Protocol",
+      "description": "Solicite uma bolsa Wraith para financiar ferramentas de endereço oculto, integrações de SDK e infraestrutura de pagamentos que preserve a privacidade."
+    },
+    "blog": {
+      "title": "Blog – Wraith Protocol",
+      "description": "Atualizações do Wraith Protocol sobre pagamentos que preservam a privacidade e infraestrutura de endereços ocultos."
+    },
+    "caseStudies": {
+      "title": "Estudos de caso – Wraith Protocol",
+      "description": "Histórias de produção de equipes usando Wraith Protocol para pagamentos privados e não vinculáveis em múltiplas redes."
+    }
+  },
   "caseStudies": {
     "eyebrow": "ESTUDOS DE CASO",
     "heading": "Soluções de privacidade do mundo real.",
