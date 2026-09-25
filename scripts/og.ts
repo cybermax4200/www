@@ -218,8 +218,7 @@ async function renderPng(config: RouteConfig, fonts: FontDef[]): Promise<Buffer>
 function patchMetadata(html: string, config: RouteConfig): string {
   const siteUrl = 'https://usewraith.xyz';
   const imageUrl = `${siteUrl}/og/${config.slug}.png`;
-  const canonicalUrl =
-    config.routePath === '/' ? siteUrl : `${siteUrl}${config.routePath}`;
+  const canonicalUrl = config.routePath === '/' ? siteUrl : `${siteUrl}${config.routePath}`;
 
   let patched = html
     .replace(/(<meta\s+property="og:image"\s+content=")[^"]*(")/g, `$1${imageUrl}$2`)
@@ -242,14 +241,8 @@ function patchMetadata(html: string, config: RouteConfig): string {
 
   // Canonical + hreflang alternates
   // Remove any previously injected canonical/hreflang links so we don't duplicate on re-runs.
-  patched = patched.replace(
-    /\s*<link\s+rel="canonical"[^>]*>\s*/g,
-    '\n    ',
-  );
-  patched = patched.replace(
-    /\s*<link\s+rel="alternate"\s+hreflang=[^>]*>\s*/g,
-    '\n    ',
-  );
+  patched = patched.replace(/\s*<link\s+rel="canonical"[^>]*>\s*/g, '\n    ');
+  patched = patched.replace(/\s*<link\s+rel="alternate"\s+hreflang=[^>]*>\s*/g, '\n    ');
 
   const hreflangLinks = [
     `<link rel="canonical" href="${canonicalUrl}" />`,
