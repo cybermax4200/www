@@ -42,7 +42,7 @@ describe('canonicalUrl', () => {
 describe('hreflangAlternates', () => {
   it('returns en, es, pt-BR, and x-default alternates', () => {
     const alts = hreflangAlternates('stellar');
-    const hreflangs = alts.map((a) => a.hreflang);
+    const hreflangs = alts.map((a) => a.hrefLang);
     expect(hreflangs).toContain('en');
     expect(hreflangs).toContain('es');
     expect(hreflangs).toContain('pt-BR');
@@ -59,7 +59,7 @@ describe('hreflangAlternates', () => {
 
   it('does not duplicate hreflang values', () => {
     const alts = hreflangAlternates('blog');
-    const hreflangs = alts.map((a) => a.hreflang);
+    const hreflangs = alts.map((a) => a.hrefLang);
     expect(new Set(hreflangs).size).toBe(hreflangs.length);
   });
 });

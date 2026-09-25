@@ -18,7 +18,6 @@ import { article, breadcrumbList, SITE_URL } from '../utils/jsonld';
 import { track } from '../utils/track';
 import i18n from '../i18n';
 import { usePageSeo } from '../utils/seo';
-import { usePageSeo } from '../utils/seo';
 
 function AuthorByline({ post }: { post: BlogPost }) {
   if (!post.author) return null;
@@ -66,7 +65,7 @@ function BlogList() {
         <meta name="description" content={seo.description} />
         <link rel="canonical" href={seo.canonical} />
         {seo.alternates.map((alt) => (
-          <link key={alt.hreflang} rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+          <link key={alt.hrefLang} rel="alternate" hrefLang={alt.hrefLang} href={alt.href} />
         ))}
         <meta property="og:title" content={seo.title} />
         <meta property="og:description" content={seo.description} />

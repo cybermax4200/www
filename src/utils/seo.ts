@@ -34,7 +34,7 @@ const LOCALE_LANG_TAG: Record<Locale, string> = {
 };
 
 export interface HreflangAlternate {
-  hreflang: string;
+  hrefLang: string;
   href: string;
 }
 
@@ -71,12 +71,12 @@ export function hreflangAlternates(page: SeoPageKey): HreflangAlternate[] {
   const canonical = canonicalUrl(page);
 
   const alternates: HreflangAlternate[] = SUPPORTED_LOCALES.map((locale) => ({
-    hreflang: LOCALE_LANG_TAG[locale],
+    hrefLang: LOCALE_LANG_TAG[locale],
     href: canonical,
   }));
 
   // x-default always points to the canonical URL
-  alternates.push({ hreflang: 'x-default', href: canonical });
+  alternates.push({ hrefLang: 'x-default', href: canonical });
 
   return alternates;
 }
