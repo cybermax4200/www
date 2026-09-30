@@ -6,6 +6,7 @@ import { trackEvent } from '../analytics';
 import { track, trackOutbound } from '../utils/track';
 import EcosystemPartners from '../components/EcosystemPartners';
 import { getDeployment } from '@wraith-protocol/sdk/chains/stellar';
+import { usePageSeo } from '../utils/seo';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

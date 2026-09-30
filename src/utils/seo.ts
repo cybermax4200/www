@@ -33,6 +33,17 @@ const LOCALE_LANG_TAG: Record<Locale, string> = {
   pt: 'pt-BR',
 };
 
+/**
+ * URL path prefix for each non-English locale.
+ * English has no prefix (it is the canonical).
+ * These must match the locale-prefix routes registered in App.tsx and the
+ * rewrite rules in vercel.json.
+ */
+const LOCALE_URL_PREFIX: Partial<Record<Locale, string>> = {
+  es: '/es',
+  pt: '/pt',
+};
+
 export interface HreflangAlternate {
   hrefLang: string;
   href: string;
@@ -59,24 +70,36 @@ export function canonicalUrl(page: SeoPageKey): string {
 }
 
 /**
+ * Returns the locale-specific URL for a page.
+ * English always resolves to the canonical URL (no prefix).
+ * Non-English locales get a path prefix, e.g. /es/stellar or /pt/grants.
+ */
+export function localizedUrl(page: SeoPageKey, locale: Locale): string {
+  if (locale === 'en') return canonicalUrl(page);
+  const prefix = LOCALE_URL_PREFIX[locale] ?? '';
+  const path = PAGE_PATHS[page];
+  if (path === '/') {
+    return `${SITE_ORIGIN}${prefix}`;
+  }
+  return `${SITE_ORIGIN}${prefix}${path}`;
+}
+
+/**
  * Returns the full list of hreflang `<link>` alternates for a page,
  * including `x-default` pointing at the canonical English URL.
  *
- * URL strategy: the site uses client-side locale switching (stored in
- * localStorage) rather than separate URL paths per locale, so all
- * alternates resolve to the same canonical URL but carry the correct
- * `hreflang` tag so search engines understand the language variants.
+ * Each locale maps to its own distinct, crawlable URL so that search engines
+ * can index the correct language variant. English (no prefix) is canonical;
+ * non-English locales use a locale path prefix (e.g. /es/stellar, /pt/grants).
  */
 export function hreflangAlternates(page: SeoPageKey): HreflangAlternate[] {
-  const canonical = canonicalUrl(page);
-
   const alternates: HreflangAlternate[] = SUPPORTED_LOCALES.map((locale) => ({
     hrefLang: LOCALE_LANG_TAG[locale],
-    href: canonical,
+    href: localizedUrl(page, locale),
   }));
 
-  // x-default always points to the canonical URL
-  alternates.push({ hrefLang: 'x-default', href: canonical });
+  // x-default always points to the canonical English URL
+  alternates.push({ hrefLang: 'x-default', href: canonicalUrl(page) });
 
   return alternates;
 }

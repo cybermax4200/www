@@ -49,12 +49,42 @@ describe('hreflangAlternates', () => {
     expect(hreflangs).toContain('x-default');
   });
 
-  it('all alternates point to the same canonical URL', () => {
+  it('en and x-default alternates point to the canonical English URL', () => {
     const canonical = canonicalUrl('grants');
     const alts = hreflangAlternates('grants');
-    for (const alt of alts) {
-      expect(alt.href).toBe(canonical);
-    }
+    const enAlt = alts.find((a) => a.hrefLang === 'en');
+    const xDefault = alts.find((a) => a.hrefLang === 'x-default');
+    expect(enAlt?.href).toBe(canonical);
+    expect(xDefault?.href).toBe(canonical);
+  });
+
+  it('es alternate points to the /es-prefixed URL', () => {
+    const alts = hreflangAlternates('stellar');
+    const esAlt = alts.find((a) => a.hrefLang === 'es');
+    expect(esAlt?.href).toBe(`${SITE_ORIGIN}/es/stellar`);
+  });
+
+  it('pt-BR alternate points to the /pt-prefixed URL', () => {
+    const alts = hreflangAlternates('grants');
+    const ptAlt = alts.find((a) => a.hrefLang === 'pt-BR');
+    expect(ptAlt?.href).toBe(`${SITE_ORIGIN}/pt/grants`);
+  });
+
+  it('home page locale alternates use prefix-only paths', () => {
+    const alts = hreflangAlternates('home');
+    const esAlt = alts.find((a) => a.hrefLang === 'es');
+    const ptAlt = alts.find((a) => a.hrefLang === 'pt-BR');
+    expect(esAlt?.href).toBe(`${SITE_ORIGIN}/es`);
+    expect(ptAlt?.href).toBe(`${SITE_ORIGIN}/pt`);
+  });
+
+  it('all hreflang URLs are distinct from each other', () => {
+    const alts = hreflangAlternates('blog');
+    const urls = alts.map((a) => a.href);
+    // en and x-default intentionally share the canonical URL, so we expect
+    // at most one duplicate (those two). Every other URL must be unique.
+    const uniqueUrls = new Set(urls);
+    expect(uniqueUrls.size).toBeGreaterThanOrEqual(alts.length - 1);
   });
 
   it('does not duplicate hreflang values', () => {
@@ -275,9 +305,17 @@ describe('locale-aware page metadata', () => {
 
     await waitFor(() => {
       const links = Array.from(document.head.querySelectorAll('link[rel="alternate"][hreflang]'));
-      for (const link of links) {
-        expect(link.getAttribute('href')).toBe(`${SITE_ORIGIN}/stellar`);
-      }
+      const enLink = links.find((l) => l.getAttribute('hreflang') === 'en');
+      const esLink = links.find((l) => l.getAttribute('hreflang') === 'es');
+      const ptLink = links.find((l) => l.getAttribute('hreflang') === 'pt-BR');
+      const xDefault = links.find((l) => l.getAttribute('hreflang') === 'x-default');
+
+      // English and x-default → canonical
+      expect(enLink?.getAttribute('href')).toBe(`${SITE_ORIGIN}/stellar`);
+      expect(xDefault?.getAttribute('href')).toBe(`${SITE_ORIGIN}/stellar`);
+      // Non-English → locale-prefixed distinct URLs
+      expect(esLink?.getAttribute('href')).toBe(`${SITE_ORIGIN}/es/stellar`);
+      expect(ptLink?.getAttribute('href')).toBe(`${SITE_ORIGIN}/pt/stellar`);
     });
   });
 

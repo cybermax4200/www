@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Header from './components/Header';
@@ -9,6 +9,7 @@ import TrustStrip from './components/TrustStrip';
 import PartnerStrip from './components/PartnerStrip';
 import { ThemeProvider } from './context/ThemeContext';
 import { usePageSeo } from './utils/seo';
+import { changeLocale, type Locale } from './i18n';
 
 // Lazy load below-the-fold homepage components
 const StealthAnimation = lazy(() => import('./components/StealthAnimation'));
@@ -45,6 +46,17 @@ const Contributors = lazy(() => import('./pages/Contributors'));
 const Blog = lazy(() => import('./pages/Blog'));
 const Ecosystem = lazy(() => import('./pages/Ecosystem'));
 const ChainsPage = lazy(() => import('./pages/Chains'));
+
+/**
+ * Sets the active locale based on the URL prefix, then renders `children`.
+ * Used by locale-prefixed routes like /es/* and /pt/*.
+ */
+function LocaleScope({ locale, children }: { locale: Locale; children: React.ReactNode }) {
+  useEffect(() => {
+    changeLocale(locale);
+  }, [locale]);
+  return <>{children}</>;
+}
 
 function Home() {
   const seo = usePageSeo('home');
@@ -230,6 +242,86 @@ export default function App() {
               }
             />
             <Route path="*" element={<NotFound />} />
+
+            {/* ── Locale-prefixed routes (/es/*, /pt/*) ────────────────────
+                These are the distinct, crawlable URLs referenced by hreflang
+                alternates. Each route activates the matching locale then
+                renders the same page component as its English counterpart.    */}
+            {(['es', 'pt'] as const).map((locale) => (
+              <>
+                <Route
+                  key={`${locale}-home`}
+                  path={`/${locale}`}
+                  element={
+                    <LocaleScope locale={locale}>
+                      <Home />
+                    </LocaleScope>
+                  }
+                />
+                <Route
+                  key={`${locale}-stellar`}
+                  path={`/${locale}/stellar`}
+                  element={
+                    <LocaleScope locale={locale}>
+                      <Layout>
+                        <Stellar />
+                      </Layout>
+                    </LocaleScope>
+                  }
+                />
+                <Route
+                  key={`${locale}-grants`}
+                  path={`/${locale}/grants`}
+                  element={
+                    <LocaleScope locale={locale}>
+                      <Layout>
+                        <Grants />
+                      </Layout>
+                    </LocaleScope>
+                  }
+                />
+                <Route
+                  key={`${locale}-blog`}
+                  path={`/${locale}/blog`}
+                  element={
+                    <LocaleScope locale={locale}>
+                      <Layout>
+                        <Blog />
+                      </Layout>
+                    </LocaleScope>
+                  }
+                />
+                <Route
+                  key={`${locale}-blog-slug`}
+                  path={`/${locale}/blog/:slug`}
+                  element={
+                    <LocaleScope locale={locale}>
+                      <Layout>
+                        <Blog />
+                      </Layout>
+                    </LocaleScope>
+                  }
+                />
+                <Route
+                  key={`${locale}-case-studies`}
+                  path={`/${locale}/case-studies`}
+                  element={
+                    <LocaleScope locale={locale}>
+                      <CaseStudies />
+                    </LocaleScope>
+                  }
+                />
+                <Route
+                  key={`${locale}-case-studies-slug`}
+                  path={`/${locale}/case-studies/:slug`}
+                  element={
+                    <LocaleScope locale={locale}>
+                      <CaseStudies />
+                    </LocaleScope>
+                  }
+                />
+              </>
+            ))}
           </Routes>
         </Suspense>
       </BrowserRouter>
