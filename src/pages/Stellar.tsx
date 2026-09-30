@@ -5,7 +5,7 @@ import { useInView } from '../hooks/useInView';
 import { trackEvent } from '../analytics';
 import { track, trackOutbound } from '../utils/track';
 import EcosystemPartners from '../components/EcosystemPartners';
-import { usePageSeo } from '../utils/seo';
+import { getDeployment } from '@wraith-protocol/sdk/chains/stellar';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -111,24 +111,20 @@ const colorMap = {
 
 // ─── Deployment table data ────────────────────────────────────────────────────
 
+const stellarDeployment = getDeployment('stellar');
+const explorerUrl = (contractId: string) =>
+  `https://stellar.expert/explorer/testnet/contract/${contractId}`;
+
 const contracts = [
   {
-    name: 'Stealth Factory',
-    // TODO: replace with real testnet contract address after deployment
-    address: 'CD3XPLACEHOLDER000000000000000000000000000000000000000000000',
-    explorer: 'https://testnet.steexp.com/contract/CD3XPLACEHOLDER',
-  },
-  {
     name: 'Announcement Registry',
-    // TODO: replace with real testnet contract address after deployment
-    address: 'GABCPLACEHOLDER000000000000000000000000000000000000000000000',
-    explorer: 'https://testnet.steexp.com/contract/GABCPLACEHOLDER',
+    address: stellarDeployment.contracts.announcer,
+    explorer: explorerUrl(stellarDeployment.contracts.announcer),
   },
   {
-    name: 'Escrow',
-    // TODO: replace with real testnet contract address after deployment
-    address: 'GESCPLACEHOLDER000000000000000000000000000000000000000000000',
-    explorer: 'https://testnet.steexp.com/contract/GESCPLACEHOLDER',
+    name: 'Names Registry',
+    address: stellarDeployment.contracts.names,
+    explorer: explorerUrl(stellarDeployment.contracts.names),
   },
 ];
 
@@ -221,14 +217,16 @@ export default function Stellar() {
   return (
     <>
       <Helmet>
-        <title>{seo.title}</title>
-        <meta name="description" content={seo.description} />
-        <link rel="canonical" href={seo.canonical} />
-        {seo.alternates.map((alt) => (
-          <link key={alt.hrefLang} rel="alternate" hrefLang={alt.hrefLang} href={alt.href} />
-        ))}
-        <meta property="og:title" content={seo.title} />
-        <meta property="og:description" content={seo.description} />
+        <title>Stealth payments on Stellar – Wraith Protocol</title>
+        <meta
+          name="description"
+          content="Low-cost, sub-second, ed25519 stealth payments on Stellar with Soroban smart contracts. Build private payment rails with the Wraith SDK."
+        />
+        <meta property="og:title" content="Stealth payments on Stellar – Wraith Protocol" />
+        <meta
+          property="og:description"
+          content="Low-cost, sub-second, ed25519 stealth payments on Stellar with Soroban smart contracts."
+        />
         <meta property="og:image" content="https://usewraith.xyz/og/stellar.png" />
         <meta property="og:url" content={seo.canonical} />
         <meta property="og:type" content="website" />
@@ -469,7 +467,7 @@ export default function Stellar() {
           </div>
 
           <p className="font-mono text-[10px] tracking-[1px] text-outline">
-            * Addresses are placeholders — replace after testnet deployment.
+            Addresses are sourced from the SDK&apos;s canonical Stellar testnet deployment registry.
           </p>
         </div>
       </section>
