@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { trackOutbound } from '../utils/track';
+import { useLocalePath } from '../hooks/useLocalePath';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -40,6 +41,7 @@ type WidgetState = 'idle' | 'submitting' | 'success' | 'error';
 
 function NewsletterWidget() {
   const { t } = useTranslation();
+  const lp = useLocalePath();
   const [email, setEmail] = useState('');
   const [state, setState] = useState<WidgetState>('idle');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -138,7 +140,7 @@ function NewsletterWidget() {
       )}
 
       <Link
-        to="/newsletter"
+        to={lp('/newsletter')}
         className="font-body text-[11px] text-outline transition-colors hover:text-on-surface-variant"
       >
         {t('newsletter.footerWidget.label').toLowerCase()} →
@@ -151,6 +153,7 @@ function NewsletterWidget() {
 
 export default function Footer() {
   const { t } = useTranslation();
+  const lp = useLocalePath();
   const [status, setStatus] = useState<StatusState>({
     label: 'Checking status...',
     tone: 'neutral',
@@ -285,7 +288,7 @@ export default function Footer() {
                     return (
                       <Link
                         key={link.label}
-                        to={link.href}
+                        to={lp(link.href)}
                         className="font-body text-[13px] text-on-surface-variant transition-colors duration-150 hover:text-on-surface"
                       >
                         {link.label}
@@ -368,7 +371,7 @@ export default function Footer() {
               <span>{status.label}</span>
             </a>
             <Link
-              to="/privacy"
+              to={lp('/privacy')}
               className="font-body text-xs text-outline transition-colors duration-150 hover:text-on-surface-variant"
             >
               {t('footer.legal.privacy')}

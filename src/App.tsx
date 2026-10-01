@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -58,6 +58,24 @@ function LocaleScope({ locale, children }: { locale: Locale; children: React.Rea
   return <>{children}</>;
 }
 
+/**
+ * Synchronises the i18n language with the URL.
+ * When the user navigates to an unprefixed (English) route — i.e. a path that
+ * does NOT start with /es or /pt — the locale is reset to English so that the
+ * language state never lingers from a previous non-English visit.
+ */
+function LocaleSync() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    const isLocalePrefixed = pathname.startsWith('/es') || pathname.startsWith('/pt');
+    if (!isLocalePrefixed) {
+      changeLocale('en');
+    }
+    // locale-prefixed routes are handled by LocaleScope; no action needed here.
+  }, [pathname]);
+  return null;
+}
+
 function Home() {
   const seo = usePageSeo('home');
 
@@ -107,6 +125,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
+        <LocaleSync />
         <Suspense fallback={null}>
           <Routes>
             <Route path="/" element={<Home />} />
