@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { entries } from '../data/case-studies.json';
 import Layout from '../components/Layout';
 import { article, breadcrumbList, serializeJsonLd, SITE_URL } from '../utils/jsonld';
+import { usePageSeo } from '../utils/seo';
 
 type CaseStudy = {
   id: string;

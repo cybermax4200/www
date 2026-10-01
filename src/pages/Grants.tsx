@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { trackOutbound } from '../utils/track';
 import waveData from '../data/wave.json';
 import { howTo, serializeJsonLd, SITE_URL } from '../utils/jsonld';
+import { usePageSeo } from '../utils/seo';
 
 type Wave = (typeof waveData)['currentWave'];
 type PastWave = (typeof waveData)['pastWaves'][number];
