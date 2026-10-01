@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { trackOutbound } from '../utils/track';
 import waveData from '../data/wave.json';
-import { howTo, SITE_URL } from '../utils/jsonld';
-import { usePageSeo } from '../utils/seo';
+import { howTo, serializeJsonLd, SITE_URL } from '../utils/jsonld';
 
 type Wave = (typeof waveData)['currentWave'];
 type PastWave = (typeof waveData)['pastWaves'][number];
@@ -70,7 +69,7 @@ export default function Grants() {
       </Helmet>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(grantsHowTo) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(grantsHowTo) }}
       />
       {/* Hero */}
       <section className="flex flex-col gap-6 border-b border-outline-variant pb-12">

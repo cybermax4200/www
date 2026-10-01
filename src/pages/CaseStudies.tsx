@@ -4,8 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { entries } from '../data/case-studies.json';
 import Layout from '../components/Layout';
-import { article, breadcrumbList, SITE_URL } from '../utils/jsonld';
-import { usePageSeo } from '../utils/seo';
+import { article, breadcrumbList, serializeJsonLd, SITE_URL } from '../utils/jsonld';
 
 type CaseStudy = {
   id: string;
@@ -62,11 +61,11 @@ function CaseStudyDetail({ study }: { study: CaseStudy }) {
     <Layout>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbs) }}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbs) }}
       />
       <div className="mx-auto max-w-4xl px-6 py-16 md:px-12">
         <Link
