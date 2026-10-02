@@ -302,7 +302,14 @@
       "erc5564": "ERC-5564 spec",
       "erc6538": "ERC-6538 spec",
       "security": "Security",
-      "press": "Press"
+      "press": "Press",
+      "blog": "Blog",
+      "caseStudies": "Case Studies",
+      "stellar": "Stellar Integration",
+      "careers": "Careers",
+      "about": "About",
+      "governance": "Governance",
+      "vitals": "Web Vitals"
     },
     "acknowledgmentsAria": "Supported by Stellar Development Foundation’s Stellar Wave program via Drips",
     "acknowledgmentsText": "Supported by Stellar Development Foundation’s Stellar Wave program via Drips",

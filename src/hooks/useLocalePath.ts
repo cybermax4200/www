@@ -20,6 +20,21 @@ const LOCALE_PREFIX: Partial<Record<Locale, string>> = {
   pt: '/pt',
 };
 
+// Routes that have localized versions (exist under /es/* and /pt/*)
+const LOCALIZED_ROUTES = new Set<string>(['/', '/stellar', '/grants', '/blog', '/case-studies']);
+
+/**
+ * Checks if a given path has a localized version.
+ * Only routes defined in the locale-prefixed routes in App.tsx should return true.
+ */
+export function hasLocalizedRoute(path: string): boolean {
+  if (!path.startsWith('/')) return false;
+  if (path === '/') return true;
+  const basePath = path.split('/')[1];
+  if (!basePath) return false;
+  return LOCALIZED_ROUTES.has(`/${basePath}`) || LOCALIZED_ROUTES.has(path);
+}
+
 export function useLocalePath(): (path: string) => string {
   const { i18n } = useTranslation();
   const locale = ((i18n.language ?? 'en').split('-')[0] ?? 'en') as Locale;
@@ -28,6 +43,29 @@ export function useLocalePath(): (path: string) => string {
   return (path: string) => {
     // External URLs, hash-only links, or already-prefixed paths pass through.
     if (!path.startsWith('/') || path.startsWith(`/es`) || path.startsWith(`/pt`)) {
+      return path;
+    }
+    return `${prefix}${path}`;
+  };
+}
+
+/**
+ * useLocalizedPath
+ *
+ * Like useLocalePath, but only prefixes routes that have localized versions.
+ * Routes without localized versions (e.g., /privacy, /about, /vitals) are
+ * returned unprefixed even for non-English locales.
+ */
+export function useLocalizedPath(): (path: string) => string {
+  const { i18n } = useTranslation();
+  const locale = ((i18n.language ?? 'en').split('-')[0] ?? 'en') as Locale;
+  const prefix = LOCALE_PREFIX[locale] ?? '';
+
+  return (path: string) => {
+    if (!path.startsWith('/') || path.startsWith(`/es`) || path.startsWith(`/pt`)) {
+      return path;
+    }
+    if (!hasLocalizedRoute(path)) {
       return path;
     }
     return `${prefix}${path}`;
