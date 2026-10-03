@@ -596,3 +596,78 @@ describe('LocaleSync', () => {
     });
   });
 });
+
+// ─── Locale-prefixed blog author/tag routes ────────────────────────────────────
+
+describe('Locale-prefixed blog author/tag routes', () => {
+  afterEach(async () => {
+    await i18n.changeLanguage('en');
+    vi.restoreAllMocks();
+  });
+
+  it('renders Blog author page at /es/blog/author/author-id with Spanish locale', async () => {
+    window.history.replaceState({}, '', '/es/blog/author/lena-vogt');
+    const { default: App } = await import('../App');
+    render(<App />);
+
+    // LocaleScope sets 'es'; i18n language should remain 'es'
+    await waitFor(() => {
+      expect(i18n.language).toBe('es');
+    });
+  });
+
+  it('renders Blog author page at /pt/blog/author/author-id with Portuguese locale', async () => {
+    window.history.replaceState({}, '', '/pt/blog/author/wraith-team');
+    const { default: App } = await import('../App');
+    render(<App />);
+
+    // LocaleScope sets 'pt'; i18n language should remain 'pt'
+    await waitFor(() => {
+      expect(i18n.language).toBe('pt');
+    });
+  });
+
+  it('renders Blog tag page at /es/blog/tag/stealth with Spanish locale', async () => {
+    window.history.replaceState({}, '', '/es/blog/tag/stealth');
+    const { default: App } = await import('../App');
+    render(<App />);
+
+    // LocaleScope sets 'es'; i18n language should remain 'es'
+    await waitFor(() => {
+      expect(i18n.language).toBe('es');
+    });
+  });
+
+  it('renders Blog tag page at /pt/blog/tag/privacy with Portuguese locale', async () => {
+    window.history.replaceState({}, '', '/pt/blog/tag/privacy');
+    const { default: App } = await import('../App');
+    render(<App />);
+
+    // LocaleScope sets 'pt'; i18n language should remain 'pt'
+    await waitFor(() => {
+      expect(i18n.language).toBe('pt');
+    });
+  });
+
+  it('renders CaseStudies detail page at /es/case-studies/payroll-processor with Spanish locale', async () => {
+    window.history.replaceState({}, '', '/es/case-studies/payroll-processor');
+    const { default: App } = await import('../App');
+    render(<App />);
+
+    // LocaleScope sets 'es'; i18n language should remain 'es'
+    await waitFor(() => {
+      expect(i18n.language).toBe('es');
+    });
+  });
+
+  it('renders CaseStudies detail page at /pt/case-studies/payroll-processor with Portuguese locale', async () => {
+    window.history.replaceState({}, '', '/pt/case-studies/payroll-processor');
+    const { default: App } = await import('../App');
+    render(<App />);
+
+    // LocaleScope sets 'pt'; i18n language should remain 'pt'
+    await waitFor(() => {
+      expect(i18n.language).toBe('pt');
+    });
+  });
+});

@@ -326,6 +326,28 @@
       "securityTxt": "Security.txt"
     }
   },
+  "pageSeo": {
+    "home": {
+      "title": "Wraith Protocol — Pagos privados para cada cadena",
+      "description": "Wraith Protocol habilita pagos privados en cualquier blockchain usando direcciones ocultas. Un SDK, múltiples cadenas."
+    },
+    "stellar": {
+      "title": "Integración Stellar — Wraith Protocol",
+      "description": "Soporte nativo de direcciones ocultas en la red Stellar con metadatos basados en memo."
+    },
+    "grants": {
+      "title": "Subvenciones — Wraith Protocol",
+      "description": "Wraith Protocol mantiene un programa de subvenciones para infraestructura de privacidad. Construye pagos privados y obtén financiación."
+    },
+    "blog": {
+      "title": "Blog — Wraith Protocol",
+      "description": "Actualizaciones, guías y análisis a fondo del equipo de Wraith."
+    },
+    "caseStudies": {
+      "title": "Casos de Estudio — Wraith Protocol",
+      "description": "Soluciones de privacidad reales construidas sobre Wraith Protocol. Desde procesadores de nómina hasta DAOs."
+    }
+  },
   "og": {
     "siteTitle": "Wraith Protocol — Pagos privados para cada cadena",
     "metaDescription": "Wraith Protocol habilita pagos privados en cualquier blockchain usando direcciones ocultas. Un SDK, múltiples cadenas.",

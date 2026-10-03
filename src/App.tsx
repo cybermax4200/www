@@ -322,6 +322,28 @@ export default function App() {
                   }
                 />
                 <Route
+                  key={`${locale}-blog-author`}
+                  path={`/${locale}/blog/author/:authorId`}
+                  element={
+                    <LocaleScope locale={locale}>
+                      <Layout>
+                        <Blog />
+                      </Layout>
+                    </LocaleScope>
+                  }
+                />
+                <Route
+                  key={`${locale}-blog-tag`}
+                  path={`/${locale}/blog/tag/:tagSlug`}
+                  element={
+                    <LocaleScope locale={locale}>
+                      <Layout>
+                        <Blog />
+                      </Layout>
+                    </LocaleScope>
+                  }
+                />
+                <Route
                   key={`${locale}-case-studies`}
                   path={`/${locale}/case-studies`}
                   element={

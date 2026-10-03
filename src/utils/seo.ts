@@ -54,15 +54,15 @@ export interface PageSeoMeta {
   title: string;
   /** Localised `<meta name="description">` content. */
   description: string;
-  /** Canonical URL (always points to the English/default version). */
+  /** Canonical URL (points to the current page's locale-specific URL). */
   canonical: string;
   /** Full set of hreflang alternates including `x-default`. */
   alternates: HreflangAlternate[];
 }
 
 /**
- * Returns the canonical URL for a page.
- * English is the authoritative locale so canonical never carries a locale prefix.
+ * Returns the canonical URL for a page in the default (English) locale.
+ * Used for `x-default` hreflang and for pages that don't have locale variants.
  */
 export function canonicalUrl(page: SeoPageKey): string {
   const path = PAGE_PATHS[page];
@@ -82,6 +82,21 @@ export function localizedUrl(page: SeoPageKey, locale: Locale): string {
     return `${SITE_ORIGIN}${prefix}`;
   }
   return `${SITE_ORIGIN}${prefix}${path}`;
+}
+
+/**
+ * Returns the locale-specific URL for a dynamic page (e.g., blog post, case study).
+ * English always resolves to the canonical URL (no prefix).
+ * Non-English locales get a path prefix, e.g. /es/blog/my-post or /pt/case-studies/my-case.
+ */
+export function localizedDynamicUrl(page: SeoPageKey, locale: Locale, dynamicPath: string): string {
+  if (locale === 'en') {
+    const path = PAGE_PATHS[page];
+    return `${SITE_ORIGIN}${path}${dynamicPath}`;
+  }
+  const prefix = LOCALE_URL_PREFIX[locale] ?? '';
+  const path = PAGE_PATHS[page];
+  return `${SITE_ORIGIN}${prefix}${path}${dynamicPath}`;
 }
 
 /**
@@ -107,14 +122,16 @@ export function hreflangAlternates(page: SeoPageKey): HreflangAlternate[] {
 /**
  * React hook — reads the current i18n language and returns localised SEO
  * metadata for the given page key.
+ * The canonical URL points to the current page's locale-specific URL.
  */
 export function usePageSeo(page: SeoPageKey): PageSeoMeta {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = (i18n.language?.split('-')[0] ?? 'en') as Locale;
 
   return {
     title: t(`pageSeo.${page}.title`),
     description: t(`pageSeo.${page}.description`),
-    canonical: canonicalUrl(page),
+    canonical: localizedUrl(page, locale),
     alternates: hreflangAlternates(page),
   };
 }

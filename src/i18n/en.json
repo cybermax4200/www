@@ -326,6 +326,28 @@
       "securityTxt": "Security.txt"
     }
   },
+  "pageSeo": {
+    "home": {
+      "title": "Wraith Protocol — Private payments for every chain",
+      "description": "Wraith Protocol enables private payments on any blockchain using stealth addresses. One SDK, multiple chains."
+    },
+    "stellar": {
+      "title": "Stellar Integration — Wraith Protocol",
+      "description": "Native stealth address support on the Stellar network with memo-based metadata."
+    },
+    "grants": {
+      "title": "Grants — Wraith Protocol",
+      "description": "Wraith Protocol runs a grant program for privacy infrastructure. Build private payments and get funded."
+    },
+    "blog": {
+      "title": "Blog — Wraith Protocol",
+      "description": "Updates, guides, and deep dives from the Wraith team."
+    },
+    "caseStudies": {
+      "title": "Case Studies — Wraith Protocol",
+      "description": "Real-world privacy solutions built on Wraith Protocol. From payroll processors to DAOs."
+    }
+  },
   "og": {
     "siteTitle": "Wraith Protocol — Private payments for every chain",
     "metaDescription": "Wraith Protocol enables private payments on any blockchain using stealth addresses. One SDK, multiple chains.",
