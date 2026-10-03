@@ -21,18 +21,35 @@ const LOCALE_PREFIX: Partial<Record<Locale, string>> = {
 };
 
 // Routes that have localized versions (exist under /es/* and /pt/*)
-const LOCALIZED_ROUTES = new Set<string>(['/', '/stellar', '/grants', '/blog', '/case-studies']);
+// Base paths that support localization
+const LOCALIZED_BASE_PATHS = new Set<string>([
+  '/',
+  '/stellar',
+  '/grants',
+  '/blog',
+  '/case-studies',
+]);
 
 /**
  * Checks if a given path has a localized version.
  * Only routes defined in the locale-prefixed routes in App.tsx should return true.
+ * This includes base paths and their sub-routes (e.g., /blog, /blog/:slug, /blog/author/:id).
  */
 export function hasLocalizedRoute(path: string): boolean {
   if (!path.startsWith('/')) return false;
   if (path === '/') return true;
-  const basePath = path.split('/')[1];
-  if (!basePath) return false;
-  return LOCALIZED_ROUTES.has(`/${basePath}`) || LOCALIZED_ROUTES.has(path);
+
+  const segments = path.split('/').filter(Boolean);
+  if (segments.length === 0) return false;
+
+  const basePath = `/${segments[0]}`;
+
+  // Check if the base path is in the localized routes
+  if (LOCALIZED_BASE_PATHS.has(basePath)) {
+    return true;
+  }
+
+  return false;
 }
 
 export function useLocalePath(): (path: string) => string {

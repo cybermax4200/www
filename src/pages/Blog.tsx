@@ -18,8 +18,9 @@ import { article, breadcrumbList, serializeJsonLd, SITE_URL } from '../utils/jso
 import { track } from '../utils/track';
 import i18n from '../i18n';
 import { usePageSeo } from '../utils/seo';
+import { useLocalizedPath } from '../hooks/useLocalePath';
 
-function AuthorByline({ post }: { post: BlogPost }) {
+function AuthorByline({ post, lp }: { post: BlogPost; lp: (path: string) => string }) {
   if (!post.author) return null;
 
   return (
@@ -27,7 +28,7 @@ function AuthorByline({ post }: { post: BlogPost }) {
       <span>•</span>
       {post.authorId ? (
         <Link
-          to={`/blog/author/${post.authorId}`}
+          to={lp(`/blog/author/${post.authorId}`)}
           className="transition-colors hover:text-on-surface"
         >
           {post.authorName}
@@ -48,6 +49,7 @@ function normalizeLocale(lang: string | undefined): string {
 function BlogList() {
   const posts = getAllPosts();
   const seo = usePageSeo('blog');
+  const lp = useLocalizedPath();
 
   const listCrumbs = breadcrumbList([
     { name: 'Home', url: SITE_URL },
@@ -96,12 +98,12 @@ function BlogList() {
           >
             <div className="flex items-center gap-4 font-mono text-[12px] text-outline">
               <time dateTime={post.date}>{post.date}</time>
-              <AuthorByline post={post} />
+              <AuthorByline post={post} lp={lp} />
               <span>•</span>
               <span>{post.readingTimeMin} min read</span>
             </div>
             <h2 className="font-heading text-[22px] font-semibold text-on-surface hover:text-primary">
-              <Link to={`/blog/${post.slug}`}>{post.title}</Link>
+              <Link to={lp(`/blog/${post.slug}`)}>{post.title}</Link>
             </h2>
             {post.excerpt && (
               <p className="font-body text-[15px] leading-relaxed text-on-surface-variant">
@@ -132,6 +134,7 @@ function BlogPostDetail({ slug }: { slug: string }) {
   // One-shot guard: ensures a single `blog_post_read` per article page view,
   // independent of re-renders or continued scrolling.
   const readFiredRef = useRef(false);
+  const lp = useLocalizedPath();
 
   useEffect(() => {
     if (!post) return;
@@ -182,7 +185,7 @@ function BlogPostDetail({ slug }: { slug: string }) {
         </Helmet>
         <h1 className="font-heading text-[28px] font-bold text-on-surface">Post Not Found</h1>
         <p className="text-on-surface-variant">The requested blog post could not be found.</p>
-        <Link to="/blog" className="font-mono text-[13px] text-primary hover:underline">
+        <Link to={lp('/blog')} className="font-mono text-[13px] text-primary hover:underline">
           ← Back to Blog
         </Link>
       </div>
@@ -231,14 +234,14 @@ function BlogPostDetail({ slug }: { slug: string }) {
 
       <div className="mb-8 flex flex-col gap-3">
         <Link
-          to="/blog"
+          to={lp('/blog')}
           className="mb-2 font-mono text-[12px] text-outline transition-colors hover:text-on-surface"
         >
           ← Back to Blog
         </Link>
         <div className="flex items-center gap-4 font-mono text-[12px] text-outline">
           <time dateTime={post.date}>{post.date}</time>
-          <AuthorByline post={post} />
+          <AuthorByline post={post} lp={lp} />
           <span>•</span>
           <span>{post.readingTimeMin} min read</span>
         </div>
@@ -289,6 +292,7 @@ function AuthorInitials({ name }: { name: string }) {
 
 function BlogAuthor({ id }: { id: string }) {
   const author = getAuthorById(id);
+  const lp = useLocalizedPath();
 
   if (!author) {
     return (
@@ -299,9 +303,9 @@ function BlogAuthor({ id }: { id: string }) {
         </Helmet>
         <h1 className="font-heading text-[28px] font-bold text-on-surface">Author Not Found</h1>
         <p className="text-on-surface-variant">
-          We couldn&apos;t find a public author page for “{id}”.
+          We couldn&apos;t find a public author page for "{id}".
         </p>
-        <Link to="/blog" className="font-mono text-[13px] text-primary hover:underline">
+        <Link to={lp('/blog')} className="font-mono text-[13px] text-primary hover:underline">
           ← Back to Blog
         </Link>
       </div>
@@ -388,7 +392,7 @@ function BlogAuthor({ id }: { id: string }) {
                 <time dateTime={post.date}>{post.date}</time>
               </div>
               <h2 className="font-heading text-[22px] font-semibold text-on-surface hover:text-primary">
-                <Link to={`/blog/${post.slug}`}>{post.title}</Link>
+                <Link to={lp(`/blog/${post.slug}`)}>{post.title}</Link>
               </h2>
               {post.excerpt && (
                 <p className="font-body text-[15px] leading-relaxed text-on-surface-variant">
@@ -420,6 +424,7 @@ function BlogAuthor({ id }: { id: string }) {
 
 function RelatedPosts({ slug }: { slug: string }) {
   const related = getRelatedPosts(slug, 3);
+  const lp = useLocalizedPath();
 
   if (related.length === 0) return null;
 
@@ -430,7 +435,7 @@ function RelatedPosts({ slug }: { slug: string }) {
         {related.map((post) => (
           <Link
             key={post.slug}
-            to={`/blog/${post.slug}`}
+            to={lp(`/blog/${post.slug}`)}
             className="flex flex-col gap-2 border border-outline-variant-30 p-4 transition-colors hover:border-outline-variant"
           >
             <div className="font-mono text-[12px] text-outline">
@@ -448,6 +453,7 @@ function RelatedPosts({ slug }: { slug: string }) {
 
 function TagArchive({ tagSlug }: { tagSlug: string }) {
   const tag = getTagFromSlug(tagSlug);
+  const lp = useLocalizedPath();
 
   if (!tag) {
     return (
@@ -457,7 +463,7 @@ function TagArchive({ tagSlug }: { tagSlug: string }) {
         </Helmet>
         <h1 className="font-heading text-[28px] font-bold text-on-surface">Tag Not Found</h1>
         <p className="text-on-surface-variant">No posts were found for this tag.</p>
-        <Link to="/blog" className="font-mono text-[13px] text-primary hover:underline">
+        <Link to={lp('/blog')} className="font-mono text-[13px] text-primary hover:underline">
           ← Back to Blog
         </Link>
       </div>
@@ -488,7 +494,7 @@ function TagArchive({ tagSlug }: { tagSlug: string }) {
           #{tag}
         </h1>
         <p className="max-w-2xl text-[17px] leading-7 text-on-surface-variant">
-          {posts.length} {posts.length === 1 ? 'post' : 'posts'} tagged “{tag}”.{' '}
+          {posts.length} {posts.length === 1 ? 'post' : 'posts'} tagged "{tag}".{' '}
           <Link
             to={`/feed/tag/${slugifyTag(tag)}.xml`}
             className="font-mono text-[13px] text-primary hover:underline"
@@ -515,7 +521,7 @@ function TagArchive({ tagSlug }: { tagSlug: string }) {
               )}
             </div>
             <h2 className="font-heading text-[22px] font-semibold text-on-surface hover:text-primary">
-              <Link to={`/blog/${post.slug}`}>{post.title}</Link>
+              <Link to={lp(`/blog/${post.slug}`)}>{post.title}</Link>
             </h2>
             {post.excerpt && (
               <p className="font-body text-[15px] leading-relaxed text-on-surface-variant">

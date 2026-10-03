@@ -6,6 +6,7 @@ import { entries } from '../data/case-studies.json';
 import Layout from '../components/Layout';
 import { article, breadcrumbList, serializeJsonLd, SITE_URL } from '../utils/jsonld';
 import { usePageSeo } from '../utils/seo';
+import { useLocalizedPath } from '../hooks/useLocalePath';
 
 type CaseStudy = {
   id: string;
@@ -38,6 +39,7 @@ type CaseStudy = {
 
 function CaseStudyDetail({ study }: { study: CaseStudy }) {
   const { t } = useTranslation();
+  const lp = useLocalizedPath();
   const formattedDate = new Intl.DateTimeFormat('en-US', {
     month: 'long',
     year: 'numeric',
@@ -70,7 +72,7 @@ function CaseStudyDetail({ study }: { study: CaseStudy }) {
       />
       <div className="mx-auto max-w-4xl px-6 py-16 md:px-12">
         <Link
-          to="/case-studies"
+          to={lp('/case-studies')}
           className="mb-8 inline-flex items-center gap-2 font-body text-[13px] text-outline transition-colors hover:text-on-surface"
         >
           ← {t('caseStudies.backToAll')}
@@ -248,6 +250,7 @@ function CaseStudyDetail({ study }: { study: CaseStudy }) {
 
 function CaseStudiesList() {
   const { t } = useTranslation();
+  const lp = useLocalizedPath();
   const [filter, setFilter] = useState<string>('all');
   const seo = usePageSeo('caseStudies');
 
@@ -344,7 +347,7 @@ function CaseStudiesList() {
             return (
               <Link
                 key={study.id}
-                to={`/case-studies/${study.slug}`}
+                to={lp(`/case-studies/${study.slug}`)}
                 className="group flex flex-col gap-5 border border-outline-variant bg-surface-container p-7 transition-colors duration-150 hover:bg-surface-bright"
               >
                 <div className="flex items-start justify-between">
@@ -412,6 +415,7 @@ function CaseStudiesList() {
 
 export default function CaseStudies() {
   const { slug } = useParams<{ slug?: string }>();
+  const lp = useLocalizedPath();
 
   if (slug) {
     const study = (entries as CaseStudy[]).find((s) => s.slug === slug);
@@ -423,7 +427,7 @@ export default function CaseStudies() {
               Case Study Not Found
             </h1>
             <Link
-              to="/case-studies"
+              to={lp('/case-studies')}
               className="font-body text-[13px] text-primary underline underline-offset-2"
             >
               ← Back to all case studies

@@ -96,6 +96,8 @@ describe('hasLocalizedRoute', () => {
     expect(hasLocalizedRoute('/')).toBe(true);
     expect(hasLocalizedRoute('/blog')).toBe(true);
     expect(hasLocalizedRoute('/blog/some-post')).toBe(true);
+    expect(hasLocalizedRoute('/blog/author/some-author')).toBe(true);
+    expect(hasLocalizedRoute('/blog/tag/some-tag')).toBe(true);
     expect(hasLocalizedRoute('/stellar')).toBe(true);
     expect(hasLocalizedRoute('/grants')).toBe(true);
     expect(hasLocalizedRoute('/case-studies')).toBe(true);
